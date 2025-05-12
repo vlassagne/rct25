@@ -22,7 +22,7 @@ df <- raw_dta %>%
 	transmute(
 		firm_id = N_firm_id,
 		tment = case_when(
-			Treatment_FIN == 1 ~ "Finance/Accounting",
+			Treatment_FIN == 1 ~ "Finance/Accounting", # redefine
 			Treatment_MKT == 1 ~ "Marketing",
 			TRUE ~ "Control"
 		),
@@ -30,8 +30,10 @@ df <- raw_dta %>%
 		profits_post = Profits1_aidedrecall_w1
 	) %>%
 	pivot_longer(
-		-c(firm_id, tment), names_to = c(".value", "period"), names_sep = "_"
-	)
+		-c(firm_id, tment), names_to = c(".value", "period"), names_sep = "_" 
+	) # better organised in long format to understand the data better 
+# here he broke down the data so we could better understand
+
 
 avgs <- df %>%
 	group_by(period, tment) %>%
@@ -65,5 +67,8 @@ ggplot(avgs, aes(x = period, group = tment, color = tment)) +
 		panel.grid.minor = element_blank(),
 		panel.grid.major.x = element_blank()
 	)
+# Typical diff in diff figure. Table 5 compare the red and the blue (or green), that's why the value are smaller.
+
+
 
 ggsave("output/acz2018_figure.pdf", width = 9, height = 6)
