@@ -1,0 +1,161 @@
+---
+title: "Research Log"
+subtitle: "Research on Corporate Transparency - Assignment 1"
+author: "Valentine Lassagne, 499198"
+date: today
+format: 
+  html:
+    date-format: "DD.MM.YYYY"
+editor: visual
+header-includes:
+  - \usepackage{setspace}
+  - \renewcommand{\arraystretch}{1.5}  # 1.5 is the multiplier for row height
+---
+
+## Step 1: Identifying Local Firms
+
+*08.05.2025*
+
+To complete Task 1, I began by identifying firms I had noticed while walking around in my neighbourhood. I currently live in Wedding with postal code **13359**. The first one was a restaurant called *Lalibela*. After checking its *Impressum*, I found that its registered address did not fall under the postal code 13359. The second firm was *Wohlfarth Schokolade*, which was indeed registered within postal code 13359.
+
+Following this, I asked my roommate if she knew of any businesses of any type, including firms, shops and services. She recommended a restaurant called *El Pepe*, mentioning that it was worth a visit. I, therefore, checked its *Impressum* and it is registered under the postal code 13359.
+
+As a next step, I searched for businesses within my postal code using Google Maps. My main focus was on food, creativity and sports, as I am particularly interested in exploring these types of places in my neighbourhood. The results of my search are summarized in the two tables below.
+
+**Table 1: Firms registered under the postal code 13359**
+
+| Firm Name on Google Maps | Official Firm Name | Address |
+|------------------------|------------------------|------------------------|
+| [Afro United Salon](https://www.google.com/maps/place/Afro+United+Salon/@52.5611636,13.3861772,17z/data=!3m1!4b1!4m6!3m5!1s0x47a8538bbb66e083:0x5ab9a73e92f768d!8m2!3d52.5611636!4d13.3887575!16s%2Fg%2F11qyp3gy83?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Afro United Salon](https://afrounitedsalon.de/impressum/) | Wollankstrasse 72, 13359 Berlin |
+| [Event Rental Hempel GmbH](https://www.google.com/maps/place/Event+Rental+Hempel+GmbH/@52.5617804,13.3776516,16z/data=!3m1!4b1!4m6!3m5!1s0x47a85230ae49f0c3:0xa8f283e252187175!8m2!3d52.5617804!4d13.3802319!16s%2Fg%2F11bcdhr95v?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [EventRental HEMPEL GmbH](https://eventrental.de/impressum/) | Holzstrasse 6a, 13359 Berlin |
+| [Wohlfarth Schokolade](https://www.google.com/maps/place/Wohlfarth+Schokolade/@52.560049,13.3792608,17z/data=!3m2!4b1!5s0x47a8523a42fd230d:0xab1f0e365ee11797!4m6!3m5!1s0x47a851fdd4b42517:0x9e5ca2a56af39d91!8m2!3d52.560049!4d13.3818411!16s%2Fg%2F1hc1ht7yn?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Wohlfarth Schokolade](https://www.wohlfarthschokolade.de/de/info/impressum.html) | Soldiner Strasse 39, 13359 Berlin |
+| [El Pepe](https://www.google.com/maps/place/El+Pepe/@52.5566747,13.3826009,17z/data=!3m1!4b1!4m6!3m5!1s0x47a8523b513ab1bd:0x8cb64b3d5fd30555!8m2!3d52.5566747!4d13.3851812!16s%2Fg%2F11bymw6dkh?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [El Pepe Tapas Bar](https://elpepetapasbar.de/impressum/) | Prinzenallee 25, 13359 Berlin |
+| [BAS CS Gallery](https://www.google.com/maps/place/BAS+CS+Gallery/@52.5573366,13.3878549,17z/data=!3m2!4b1!5s0x47a8523d1b8b2401:0x1d82340dd66ab117!4m6!3m5!1s0x47a8536ee842def1:0xf51d6635d3ba110d!8m2!3d52.5573366!4d13.3904352!16s%2Fg%2F11ll6j56n7?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Bas CS Gallery](https://bas-cs-gallery.de/impressum/) | Soldiner Strasse 103, 13359 Berlin |
+
+**Table 2: Firms not registered under the postal code 13359**
+
+| Firm Name on Google Maps | Official Firm Name | Google Maps Address | Registered Address |
+|------------------|------------------|------------------|------------------|
+| [Effect Defense Tækwondo + Selbstverteidigung in Berlin Mitte](https://www.google.com/maps/place/Effect+Defense+Taekwondo+%2B+Selbstverteidigung+in+Berlin+Mitte/@52.55656,13.38076,16z/data=!3m1!4b1!4m6!3m5!1s0x47a852253286b2c9:0xb91e117315f45937!8m2!3d52.55656!4d13.38076!16s%2Fg%2F11hbr1hj3p?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Sultans e.V.](http://effect-defense.de/impressum/) | Osloer Strasse 24, 13359 Berlin | Cauerstrasse 15, 10587 Berlin |
+| [POCO Berlin - Wedding](https://www.google.com/maps/place/POCO+Berlin+-+Wedding/@52.5577185,13.3732627,17z/data=!3m1!5s0x47a8523049d6cf11:0x971e7b46e5bd86c8!4m15!1m8!3m7!1s0x47a8523a11130799:0x1c212049953ffa60!2s13359+Berlin,+Allemagne!3b1!8m2!3d52.5591664!4d13.3830433!16s%2Fg%2F1tdx7r9f!3m5!1s0x47a852304393191d:0x45bfdeafdc8292bf!8m2!3d52.55858!4d13.37651!16s%2Fg%2F1vp72tg6?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [POCO Einrichtungsmärkte GmbH](https://www.poco.de/c/impressum) | Drontheimer Strasse 30a, 13359 Berlin | Industriestrasse 39, 59192 Bergkamen |
+| [Lalibela Restaurant - Taste of Ethiopia, Wedding](https://www.google.com/maps/place/13359+Berlin,+Allemagne/@52.5607201,13.3405174,13z/data=!3m1!4b1!4m6!3m5!1s0x47a8523a11130799:0x1c212049953ffa60!8m2!3d52.5591664!4d13.3830433!16s%2Fg%2F1tdx7r9f?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Lalibela GmbH](http://lalibelawedding.de/impressum/) | Soldiner Strasse 41, 13359 Berlin | Lauterstraße 11a, 12159 Berlin |
+
+## Step 2: Local Firms in Corporate Register
+
+*12.05.2025*
+
+For Task 2, I searched for the firms selected in Step 1 on the website <https://www.unternehmensregister.de/ureg/>. My results are summarized in the tables below.
+
+**Table 3: Register Information**
+
+| Official Firm Name      | Registered | Registered Company Name | Register Number |
+|------------------|------------------|------------------|------------------|
+| Afro United Salon       | No         | \-                      | \-              |
+| EventRental HEMPEL GmbH | Yes        | EventRental Hempel GmbH | HRB 26423       |
+| Wohlfarth Schokolade    | No         | \-                      | \-              |
+| El Pepe Tapas Bar       | No         | \-                      | \-              |
+| Bas CS Gallery          | No         | \-                      | \-              |
+
+**Table 4: Financial Statements**
+
+| Official Firm Name | Financial Statements | Type | Latest Fiscal Start Date | Latest Fiscal End Date | Date of Filing |
+|------------|------------|------------|------------|------------|------------|
+| Afro United Salon | \- | \- | \- | \- | \- |
+| EventRental HEMPEL GmbH | Available | Single Legal Entity | 01.01.2023 | 31.12.2023 | 04.03.2025 |
+| Wohlfarth Schokolade | \- | \- | \- | \- | \- |
+| El Pepe Tapas Bar | \- | \- | \- | \- | \- |
+| Bas CS Gallery | \- | \- | \- | \- | \- |
+
+Among those firms, only *EventRental HEMPEL GmbH* had data available. Financial statements are accessible for the years 2007 to 2023. For the other businesses, one possible reason for the absence of registration could be that they are newly established. However, according to the websites of *Afro United Salon* and *Wohlfarth Schokolade*, these businesses have been operating since 2021 and 2020, respectively. No founding dates were provided for the remaining two firms.
+
+Regarding *Bas CS Gallery*, it is part of *Kolony Wedding e.V.*, a non-profit organization that hosts exhibitions and other cultural activities. This explains why it is not listed.
+
+Finally, another reason for the lack of registration could be that these businesses are sole proprietors. Unlike *EventRental HEMPEL GmbH*, the *Impressum* sections of *Afro United Salon, Wohlfarth Schokolade* and *El Pepe Tapas Bar* include the full name of an individual, which confirms that these three are likely operated as sole proprietorships.
+
+## Step 3: Orbis Data
+
+*20.05.2025*
+
+I cloned the repository to my local desktop using the following command in the terminal:
+
+`bash git clone https://github.com/joachim-gassen/rct25.git`
+
+Next, I downloaded the Orbis data from Moodle in my personal file and copied it into the `data/generated` folder of the `rct25` project using the command below:
+
+`bash cp ~/Desktop/Research\ on\ Corporate\ Transparency/Assignment\ 1/orbis_panel_berlin.rds ~/Desktop/rct25/data/generated`
+
+I then downloaded the data into R. Initially, I gained a general understanding by running these commands: `str()` and `summary()`. Afterwards, I filtered the dataset to include only entries with the postal code **13359**. I then checked whether the value of `name_native` matched *EventRental Hempel GmbH*. I found matching entries for the years 2012 to 2021.
+
+```{r}
+#| include: false
+# hidden setup code
+library(dplyr)
+
+orbis_data <- readRDS("data/generated/orbis_panel_berlin.rds")
+
+str(orbis_data)
+summary(orbis_data) 
+
+data_postcode_13359 <- orbis_data %>%
+  filter(postcode == "13359")
+
+EventRental_data <- data_postcode_13359 %>%
+  filter(name_native == "EventRental Hempel GmbH")
+
+str(EventRental_data)
+summary(EventRental_data)
+
+EventRental_data$year
+
+```
+
+## Step 4: Largest Firm in Orbis with Postal Code 13359
+
+*20.05.2025*
+
+Building on the dataset from Step 3, I further filtered the data to include only firms with postal code **13359** and a reporting year of **2021**. I then created a new dataset by sorting the firms in descending order based on total assets (`toas`, as defined in the Orbis data guide). The top entry, *USE*, *Union Sozialer Einrichtungen gemeinnützige GmbH*, had its 2021 financial report available.
+
+*23.05.2025*
+
+From the Orbis database, I retrieved the firm's total assets (`toas`), the book value of equity (`shfd`) and the net sales (`turn`). According to the Orbis documentation, the book value of equity is composed of capital (`capi`) and other shareholders' funds (`osfd`). I then downloaded the 2021 financial statement of *USE*. From the income statement, I obtained the net sales. From the balance sheet, I identified the total assets and the book value of equity, which consists of capital and retained earnings and is calculated as: 
+$$
+\begin{align*}
+\text{BVE} &= \text{Capital} + \text{Retained Earnings} + \text{Special items with an equity portion} \\
+          &= 26{,}000 + 9{,}605{,}603.11 + 3{,}816{,}081.35 \\
+          &= 13{,}447{,}684.46
+\end{align*}
+$$
+
+**Table 5: Financial Comparison for USE (2021)**
+
+| Metric               | Orbis      | Unternehmensregister |
+|----------------------|------------|----------------------|
+| Total Assets         | 20'334'294 | 20'334'294           |
+| Book Value of Equity | 13'447'684 | 13'447'684           |
+| Net Sales            | 33'756'421 | 33'756'421           |
+
+The table above presents a summary of my findings. It shows that there is no difference between Orbis and Unternehmensregister data, as they align perfectly for the 2021 financial statement. After rounding values to the nearest whole number, the figures are identical. 
+
+```{r}
+#| include: false
+# hidden setup code
+data_postcode_13359_year_2021 <- data_postcode_13359 %>%
+  filter(year == 2021)
+
+str(data_postcode_13359_year_2021)
+colnames(data_postcode_13359_year_2021)
+
+data_sorted_by_toas <- data_postcode_13359_year_2021 %>%
+  arrange(desc(toas))
+
+USE <- as.data.frame(t(data_sorted_by_toas[1, ])) # largest total assets
+
+USE_TA <- USE["toas",]
+USE_BVE <- USE["shfd",]
+USE_NS <- USE["turn",]
+
+```
+
+## Step 5: Comparison of Firms with Postal Code 13359 to the Berlin Firm Population
+
+*23.05.2025*
