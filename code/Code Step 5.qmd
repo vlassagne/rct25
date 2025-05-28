@@ -1,0 +1,121 @@
+---
+title: "Code Step 5"
+subtitle: "Research on Corporate Transparency - Assignment 1"
+author: "Valentine Lassagne, 499198"
+date: today
+format: 
+  pdf:
+    date-format: "DD.MM.YYYY"
+editor: visual
+---
+
+## Code For Step 5
+
+```{r}
+library(broom)
+library(tidyr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(tinytex)
+
+
+orbis_data <- readRDS("data/generated/orbis_panel_berlin.rds")
+
+if (any(orbis_data$toas < 0)) {
+  cat("yes\n")
+  cat(sum(orbis_data$toas < 0), "rows with negative values\n")
+} else {
+  cat("no\n")
+}
+
+orbis_2021 <- orbis_data %>%
+  filter(year == 2021)
+
+# Adding columns for the equity ratios and the dummy
+orbis_2021 <- orbis_2021 %>%           
+  mutate(equity_ratio = shfd / toas)    
+colnames(orbis_2021)
+
+orbis_2021 <- orbis_2021 %>%
+  mutate(postcode_13359 = if_else(postcode == "13359", 1, 0))
+table(orbis_2021$postcode_13359)
+
+# t-test
+t_test_result <- t.test(equity_ratio ~ postcode_13359, data = orbis_2021)
+
+tt_summary <- tidy(t_test_result)
+
+# Rename columns
+final_table <- tt_summary %>%
+  select(
+    Group1_Mean = estimate1,
+    Group2_Mean = estimate2,
+    t_statistic = statistic,
+    df = parameter,
+    p_value = p.value,
+    CI_Lower = conf.low,
+    CI_Upper = conf.high
+  ) %>%
+  mutate(
+    Group1_Mean = round(Group1_Mean, 2),
+    Group2_Mean = round(Group2_Mean, 2),
+    t_statistic = round(t_statistic, 3),
+    df = round(df, 0),
+    p_value = round(p_value, 3),
+    CI_Lower = round(CI_Lower, 2),
+    CI_Upper = round(CI_Upper, 2)
+  )
+
+proper_colnames <- c(
+  "Mean Equity Ratio (not 13359)",
+  "Mean Equity Ratio (13359)",
+  "t stat",
+  "Degrees of freedom",
+  "p-value",
+  "95% CI Lower",
+  "95% CI Upper"
+)
+
+
+cat("\\begin{landscape}\n") 
+# LaTeX table as string
+table_latex <- kable(
+  final_table,
+  format = "latex",
+  col.names = proper_colnames,
+  caption = "\\label{tbl:ttest_summary} Two-Sample T-Test on Equity Ratios: Firms in 13359 vs. Rest of Berlin (2021)",
+  booktabs = TRUE,
+  digits = 3,
+  na = ""
+) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  footnote(
+    general = "The data is obtained from the firms registered within postal code 13359 and the entire Berlin population of firms provided by Orbis. This t-test covers the period",
+    footnote_as_chunk = TRUE,
+    threeparttable = TRUE) %>%
+  as.character()
+cat("\\end{landscape}\n") 
+
+# LaTeX document
+latex_document <- paste0(
+  "\\documentclass{article}\n",
+  "\\usepackage{booktabs}\n",
+  "\\usepackage{caption}\n",
+  "\\usepackage{pdflscape}\n",
+  "\\usepackage{threeparttable}",
+  "\\begin{document}\n",
+  "\\begin{landscape}\n",
+  table_latex, "\n",
+  "\\end{landscape}\n", 
+  "\\end{document}\n"
+)
+
+# LaTeX to .tex file
+tex_file <- "ttest_table.tex"
+writeLines(latex_document, tex_file)
+
+# .tex file to PDF
+tinytex::latexmk(tex_file)
+
+```

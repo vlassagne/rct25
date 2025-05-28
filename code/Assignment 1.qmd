@@ -1,18 +1,53 @@
 ---
-title: "Research Log"
-subtitle: "Research on Corporate Transparency - Assignment 1"
-author: "Valentine Lassagne, 499198"
-date: today
 format: 
-  html:
+  pdf:
+    documentclass: article
+    engine: knitr
     date-format: "DD.MM.YYYY"
+    toc: false
+    documentclass-options: titlepage
+    header-includes: |
+      \usepackage[margin=1in]{geometry} 
+      \usepackage{titling}
+      \setlength{\droptitle}{-2em} 
+      \usepackage{array}
+      \renewcommand{\arraystretch}{1.5}
+      \usepackage{graphicx}
+bibliography: references.bib
 editor: visual
-header-includes:
-  - \usepackage{setspace}
-  - \renewcommand{\arraystretch}{1.5}  # 1.5 is the multiplier for row height
 ---
 
-## Step 1: Identifying Local Firms
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  
+  \includegraphics[width=0.6\textwidth]{HU_logo.png} 
+  \vspace{0.5cm}
+  
+  {\huge Assignment 1 - Empirical Assignment \par}
+  \vspace{1cm}
+  
+  {\Huge\bfseries Research Log \par}
+  \vspace{2cm}
+  
+  {\Large Research on Corporate Transparency (SoSe 2025) \par}
+  \vspace{0.5cm}
+  
+  {\Large 708016 \par}
+  \vspace{0.5cm}
+  
+  {\Large Prof. Dr. Joachim Gassen \par}
+  \vspace{0.5cm}
+  
+  {\Large Valentine Pasqualina Lassagne, 499198 \par}
+  \vfill
+  
+  {\large \today \par}
+\end{titlepage}
+\tableofcontents
+\newpage
+
+# Step 1: Identifying Local Firms
 
 *08.05.2025*
 
@@ -40,7 +75,7 @@ As a next step, I searched for businesses within my postal code using Google Map
 | [POCO Berlin - Wedding](https://www.google.com/maps/place/POCO+Berlin+-+Wedding/@52.5577185,13.3732627,17z/data=!3m1!5s0x47a8523049d6cf11:0x971e7b46e5bd86c8!4m15!1m8!3m7!1s0x47a8523a11130799:0x1c212049953ffa60!2s13359+Berlin,+Allemagne!3b1!8m2!3d52.5591664!4d13.3830433!16s%2Fg%2F1tdx7r9f!3m5!1s0x47a852304393191d:0x45bfdeafdc8292bf!8m2!3d52.55858!4d13.37651!16s%2Fg%2F1vp72tg6?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [POCO Einrichtungsmärkte GmbH](https://www.poco.de/c/impressum) | Drontheimer Strasse 30a, 13359 Berlin | Industriestrasse 39, 59192 Bergkamen |
 | [Lalibela Restaurant - Taste of Ethiopia, Wedding](https://www.google.com/maps/place/13359+Berlin,+Allemagne/@52.5607201,13.3405174,13z/data=!3m1!4b1!4m6!3m5!1s0x47a8523a11130799:0x1c212049953ffa60!8m2!3d52.5591664!4d13.3830433!16s%2Fg%2F1tdx7r9f?entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D) | [Lalibela GmbH](http://lalibelawedding.de/impressum/) | Soldiner Strasse 41, 13359 Berlin | Lauterstraße 11a, 12159 Berlin |
 
-## Step 2: Local Firms in Corporate Register
+# Step 2: Local Firms in Corporate Register
 
 *12.05.2025*
 
@@ -72,7 +107,7 @@ Regarding *Bas CS Gallery*, it is part of *Kolony Wedding e.V.*, a non-profit or
 
 Finally, another reason for the lack of registration could be that these businesses are sole proprietors. Unlike *EventRental HEMPEL GmbH*, the *Impressum* sections of *Afro United Salon, Wohlfarth Schokolade* and *El Pepe Tapas Bar* include the full name of an individual, which confirms that these three are likely operated as sole proprietorships.
 
-## Step 3: Orbis Data
+# Step 3: Orbis Data
 
 *20.05.2025*
 
@@ -84,7 +119,7 @@ Next, I downloaded the Orbis data from Moodle in my personal file and copied it 
 
 `bash cp ~/Desktop/Research\ on\ Corporate\ Transparency/Assignment\ 1/orbis_panel_berlin.rds ~/Desktop/rct25/data/generated`
 
-I then downloaded the data into R. Initially, I gained a general understanding by running these commands: `str()` and `summary()`. Afterwards, I filtered the dataset to include only entries with the postal code **13359**. I then checked whether the value of `name_native` matched *EventRental Hempel GmbH*. I found matching entries for the years 2012 to 2021.
+I imported the dataset into R and started by inspecting its structure and contents using the `str()` and `summary()` functions. To check whether a specific firm appeared in the dataset, I created a function `check_firm_name(data, firm_name)` that compares the given name to the `name_native` column. If a match is found, the function prints "yes" along with the years in which financial statements are available. When applied to *EventRental Hempel GmbH*, the function returned entries for the years 2012 through 2021. s
 
 ```{r}
 #| include: false
@@ -96,35 +131,38 @@ orbis_data <- readRDS("data/generated/orbis_panel_berlin.rds")
 str(orbis_data)
 summary(orbis_data) 
 
-data_postcode_13359 <- orbis_data %>%
-  filter(postcode == "13359")
+check_firm_name <- function(data, firm_name) {
+  match_rows <- data[data$name_native == firm_name, ]
+  
+  if (nrow(match_rows) > 0) {
+    cat("yes\n")
+    cat("year(s):", paste(match_rows$year, collapse = ", "), "\n")
+  } else {
+    cat("no\n")
+  }
+}
 
-EventRental_data <- data_postcode_13359 %>%
-  filter(name_native == "EventRental Hempel GmbH")
-
-str(EventRental_data)
-summary(EventRental_data)
-
-EventRental_data$year
+check_firm_name(orbis_data, "EventRental Hempel GmbH")
 
 ```
 
-## Step 4: Largest Firm in Orbis with Postal Code 13359
+# Step 4: Largest Firm in Orbis with Postal Code 13359
 
 *20.05.2025*
 
-Building on the dataset from Step 3, I further filtered the data to include only firms with postal code **13359** and a reporting year of **2021**. I then created a new dataset by sorting the firms in descending order based on total assets (`toas`, as defined in the Orbis data guide). The top entry, *USE*, *Union Sozialer Einrichtungen gemeinnützige GmbH*, had its 2021 financial report available.
+For this task, I filtered the data to include only firms with postal code **13359** and a reporting year of **2021**. I then created a new dataset by sorting the firms in descending order based on total assets (`toas`, as defined in the Orbis data guide). The top entry, *USE*, [*Union Sozialer Einrichtungen gemeinnützige GmbH*](https://www.unternehmensregister.de/ureg/result.html;jsessionid=4237FE88389F66484F4BC91F1E317F89.web04-1?submitaction=showDocument&id=32035317), had its 2021 financial report available.
 
 *23.05.2025*
 
-From the Orbis database, I retrieved the firm's total assets (`toas`), the book value of equity (`shfd`) and the net sales (`turn`). According to the Orbis documentation, the book value of equity is composed of capital (`capi`) and other shareholders' funds (`osfd`). I then downloaded the 2021 financial statement of *USE*. From the income statement, I obtained the net sales. From the balance sheet, I identified the total assets and the book value of equity, which consists of capital and retained earnings and is calculated as: 
-$$
+From the Orbis database, I retrieved the firm's total assets (`toas`), the book value of equity (`shfd`) and the net sales (`turn`). According to the Orbis documentation, the book value of equity is composed of capital (`capi`) and other shareholders' funds (`osfd`). I then downloaded the 2021 financial statement of *USE*. From the income statement, I obtained the net sales. From the balance sheet, I identified the total assets and the book value of equity, which consists of capital, retained earnings and special items with an equity portion and is calculated as:
+
+```{=latex}
 \begin{align*}
-\text{BVE} &= \text{Capital} + \text{Retained Earnings} + \text{Special items with an equity portion} \\
+\textbf{BVE} &= \text{Capital} + \text{Retained Earnings} + \text{Special items with an equity portion} \\
           &= 26{,}000 + 9{,}605{,}603.11 + 3{,}816{,}081.35 \\
           &= 13{,}447{,}684.46
 \end{align*}
-$$
+```
 
 **Table 5: Financial Comparison for USE (2021)**
 
@@ -134,21 +172,20 @@ $$
 | Book Value of Equity | 13'447'684 | 13'447'684           |
 | Net Sales            | 33'756'421 | 33'756'421           |
 
-The table above presents a summary of my findings. It shows that there is no difference between Orbis and Unternehmensregister data, as they align perfectly for the 2021 financial statement. After rounding values to the nearest whole number, the figures are identical. 
+The table above presents a summary of my findings. It shows that there is no difference between Orbis and Unternehmensregister data, as they align perfectly for the 2021 financial statement. After rounding values to the nearest whole number, the figures are identical. The matching data shows that the firm follows the rules and reports as required. However, it does not automatically mean the firm is fully transparent, just that it meets the basic legal obligations.
 
 ```{r}
 #| include: false
 # hidden setup code
-data_postcode_13359_year_2021 <- data_postcode_13359 %>%
-  filter(year == 2021)
+data_postcode_13359_year_2021 <- orbis_data %>%
+  filter(postcode == "13359", year == 2021)
 
 str(data_postcode_13359_year_2021)
-colnames(data_postcode_13359_year_2021)
 
 data_sorted_by_toas <- data_postcode_13359_year_2021 %>%
   arrange(desc(toas))
 
-USE <- as.data.frame(t(data_sorted_by_toas[1, ])) # largest total assets
+USE <- as.data.frame(t(data_sorted_by_toas[1, ]))
 
 USE_TA <- USE["toas",]
 USE_BVE <- USE["shfd",]
@@ -156,6 +193,18 @@ USE_NS <- USE["turn",]
 
 ```
 
-## Step 5: Comparison of Firms with Postal Code 13359 to the Berlin Firm Population
+# Step 5: Comparison of Firms with Postal Code 13359 to the Berlin Firm Population
 
 *23.05.2025*
+
+According to @mishra2019application, I applied a two-sample, two-tailed t-test to compare the mean equity ratios of two distinct groups in the year 2021: firms located in postal code 13359 and all other firms in Berlin. The goal was to test whether the difference in mean equity ratios between these two populations is statistically significant.
+
+*28.05.2025*
+
+I began by checking whether there were any negative values in the total assets column and fortunately, there were none. Since I conducted a t-test, I focused only on data from the year 2021 rather than using the full panel. I added a new column to the dataset to calculate equity ratios, then created a dummy variable indicating whether a firm's postcode is **13359** (1) or not (0). Using this, I ran a two-sample t-test to compare the mean equity ratios between the two groups. I used the `tidy()` function to clean up the test results, renamed the columns for clarity and added notes to create the final table. The table was formatted using LaTeX for better presentation.
+
+
+
+\newpage
+
+# References
