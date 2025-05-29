@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{threeparttable}\usepackage{geometry}
+\geometry{left=1cm, right=2cm, top=2cm, bottom=2cm}
+\begin{document}
+\begin{landscape}
+\begin{table}[!h]
+\centering
+\caption{\label{tbl:ttest_summary} Two-Sample T-Test Results Comparing Total Assets and Equity Ratios between Firms in Postal Code 13359 and the Rest of Berlin (2021)}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{llllllll}
+\toprule
+Variable & Means (not 13359) & Means (13359) & t stat & Degrees of freedom & p-value & 95\% CI Lower & 95\% CI Upper\\
+\midrule
+Total Assets & 24'593'922 & 1'810'876 & 6.15984 & 25'734 & 7.389554e-10*** & 15'533'502 & 30'032'590\\
+Equity Ratios & -46.87263 & -0.0362 & -1.27303 & 27'682 & 0.203 & -118.94944 & 25.27659\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item \textit{Note: } 
+\item The table presents the results of two two-sample, two-tailed t-tests conducted for the year 2021. The tests compare the mean Total Assets and mean Equity Ratios of firms located in postal code 13359 against those of all other firms in Berlin, based on data from Orbis. The dataset contains a total of 28'009 firms, excluding 273 firms without postcode information, which means these firms could not be assigned a postcode dummy value of 0 or 1. “Total Assets” are taken directly from the Orbis variable “toas”. The “Equity Ratios” were computed as “shfd / toas”, where “shfd” represents shareholders' funds. All figures are shown in their raw units. The columns labeled “Means (not 13359)” and “Means (13359)” report the groups' averages. The p-values reflect whether differences in means are statistically significant, with significance levels: * p-value less than 0.05, ** p-value less than 0.01, *** p-value less than 0.001. Degrees of freedom are from Welch’s t-test. Confidence intervals are shown at the 95\% level.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+\end{landscape}
+\end{document}
+

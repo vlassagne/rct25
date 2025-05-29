@@ -18,6 +18,7 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 library(tinytex)
+library(scales)
 
 
 orbis_data <- readRDS("data/generated/orbis_panel_berlin.rds")
@@ -41,14 +42,92 @@ orbis_2021 <- orbis_2021 %>%
   mutate(postcode_13359 = if_else(postcode == "13359", 1, 0))
 table(orbis_2021$postcode_13359)
 
-# t-test
-t_test_result <- t.test(equity_ratio ~ postcode_13359, data = orbis_2021)
+# t-test total assets
+t_test_result_ta <- t.test(toas ~ postcode_13359, data = orbis_2021)
 
-tt_summary <- tidy(t_test_result)
+tt_summary_ta <- tidy(t_test_result_ta) %>%
+  mutate(variable = "Total Assets")
+
+
+# t-test equity ratios
+t_test_result_equity <- t.test(equity_ratio ~ postcode_13359, data = orbis_2021)
+
+tt_summary_equity <- tidy(t_test_result_equity) %>%
+  mutate(variable = "Equity Ratios")
+
+# Both
+tt_summary <- bind_rows(tt_summary_ta, tt_summary_equity)
+
+tt_summary <- tt_summary %>%
+  relocate(variable, .before = estimate)
+
+# Verifying t-test results
+summary(orbis_2021$equity_ratio)
+summary(orbis_2021$shfd)
+summary(orbis_2021$toas)
+
+summary_negatives <- orbis_2021 %>%
+  mutate(
+    neg_shfd = shfd < 0,
+    neg_toas = toas < 0,
+    neg_both = neg_shfd & neg_toas
+  ) %>%
+  group_by(postcode_13359) %>%
+  summarise(
+    count = n(),
+    neg_shfd_count = sum(neg_shfd),
+    neg_toas_count = sum(neg_toas),
+    neg_both_count = sum(neg_both)
+  )
+
+#######
+tt_summary <- tt_summary %>%
+  mutate(
+    estimate = case_when(
+      variable == "Total Assets"  ~ number(estimate, accuracy = 1, big.mark = "'"),
+      variable == "Equity Ratios"  ~ as.character(round(estimate, 5))
+    ),
+    estimate1 = case_when(
+      variable == "Total Assets"  ~ number(estimate1, accuracy = 1, big.mark = "'"),
+      variable == "Equity Ratios"  ~ as.character(round(estimate1, 5))
+    ),
+    estimate2 = case_when(
+      variable == "Total Assets"  ~ number(estimate2, accuracy = 1, big.mark = "'"),
+      variable == "Equity Ratios"  ~ as.character(round(estimate2, 5))
+    ),
+    statistic = as.character(round(statistic, 5)),
+    p.value = case_when(
+      variable == "Total Assets"  ~ paste0(format(p.value, scientific = TRUE),
+                                           case_when(
+                                             p.value < 0.001 ~ "***",
+                                             p.value < 0.01  ~ "**",
+                                             p.value < 0.05  ~ "*",
+                                             TRUE            ~ "")
+                                           ),
+      variable == "Equity Ratios" ~ paste0(as.character(round(p.value, 4)),
+                                           case_when(
+                                             p.value < 0.001 ~ "***",
+                                             p.value < 0.01  ~ "**",
+                                             p.value < 0.05  ~ "*",
+                                             TRUE            ~ "")
+                                           )
+    ),
+    parameter = number(round(parameter, 0), accuracy = 1, big.mark = "'"),
+    conf.low  = case_when(
+      variable == "Total Assets"  ~ number(conf.low, accuracy = 1, big.mark = "'"),
+      variable == "Equity Ratios"  ~ as.character(round(conf.low, 5))
+    ),
+    conf.high = case_when(
+      variable == "Total Assets"  ~ number(conf.high, accuracy = 1, big.mark = "'"),
+      variable == "Equity Ratios"  ~ as.character(round(conf.high, 5))
+    )
+  )
+#######
 
 # Rename columns
 final_table <- tt_summary %>%
   select(
+    Variable = variable,
     Group1_Mean = estimate1,
     Group2_Mean = estimate2,
     t_statistic = statistic,
@@ -56,20 +135,12 @@ final_table <- tt_summary %>%
     p_value = p.value,
     CI_Lower = conf.low,
     CI_Upper = conf.high
-  ) %>%
-  mutate(
-    Group1_Mean = round(Group1_Mean, 2),
-    Group2_Mean = round(Group2_Mean, 2),
-    t_statistic = round(t_statistic, 3),
-    df = round(df, 0),
-    p_value = round(p_value, 3),
-    CI_Lower = round(CI_Lower, 2),
-    CI_Upper = round(CI_Upper, 2)
   )
 
 proper_colnames <- c(
-  "Mean Equity Ratio (not 13359)",
-  "Mean Equity Ratio (13359)",
+  "Variable",
+  "Means (not 13359)",
+  "Means (13359)",
   "t stat",
   "Degrees of freedom",
   "p-value",
@@ -84,14 +155,14 @@ table_latex <- kable(
   final_table,
   format = "latex",
   col.names = proper_colnames,
-  caption = "\\label{tbl:ttest_summary} Two-Sample T-Test on Equity Ratios: Firms in 13359 vs. Rest of Berlin (2021)",
+  caption = "\\label{tbl:ttest_summary} Two-Sample T-Test Results Comparing Total Assets and Equity Ratios between Firms in Postal Code 13359 and the Rest of Berlin (2021)",
   booktabs = TRUE,
   digits = 3,
   na = ""
 ) %>%
   kable_styling(latex_options = "hold_position") %>%
   footnote(
-    general = "The data is obtained from the firms registered within postal code 13359 and the entire Berlin population of firms provided by Orbis. This t-test covers the period",
+    general = "The table presents the results of two two-sample, two-tailed t-tests conducted for the year 2021. The tests compare the mean Total Assets and mean Equity Ratios of firms located in postal code 13359 against those of all other firms in Berlin, based on data from Orbis. The dataset contains a total of 28'009 firms, excluding 273 firms without postcode information, which means these firms could not be assigned a postcode dummy value of 0 or 1. “Total Assets” are taken directly from the Orbis variable “toas”. The “Equity Ratios” were computed as “shfd / toas”, where “shfd” represents shareholders' funds. All figures are shown in their raw units. The columns labeled “Means (not 13359)” and “Means (13359)” report the groups' averages. The p-values reflect whether differences in means are statistically significant, with significance levels: * p-value less than 0.05, ** p-value less than 0.01, *** p-value less than 0.001. Degrees of freedom are from Welch’s t-test. Confidence intervals are shown at the 95% level.",
     footnote_as_chunk = TRUE,
     threeparttable = TRUE) %>%
   as.character()
@@ -104,6 +175,8 @@ latex_document <- paste0(
   "\\usepackage{caption}\n",
   "\\usepackage{pdflscape}\n",
   "\\usepackage{threeparttable}",
+  "\\usepackage{geometry}\n",
+  "\\geometry{left=1cm, right=2cm, top=2cm, bottom=2cm}\n",
   "\\begin{document}\n",
   "\\begin{landscape}\n",
   table_latex, "\n",
@@ -112,7 +185,7 @@ latex_document <- paste0(
 )
 
 # LaTeX to .tex file
-tex_file <- "ttest_table.tex"
+tex_file <- "ttests_table.tex"
 writeLines(latex_document, tex_file)
 
 # .tex file to PDF

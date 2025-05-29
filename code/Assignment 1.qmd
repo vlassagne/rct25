@@ -119,7 +119,7 @@ Next, I downloaded the Orbis data from Moodle in my personal file and copied it 
 
 `bash cp ~/Desktop/Research\ on\ Corporate\ Transparency/Assignment\ 1/orbis_panel_berlin.rds ~/Desktop/rct25/data/generated`
 
-I imported the dataset into R and started by inspecting its structure and contents using the `str()` and `summary()` functions. To check whether a specific firm appeared in the dataset, I created a function `check_firm_name(data, firm_name)` that compares the given name to the `name_native` column. If a match is found, the function prints "yes" along with the years in which financial statements are available. When applied to *EventRental Hempel GmbH*, the function returned entries for the years 2012 through 2021. s
+I imported the dataset into R and started by inspecting its structure and contents using the `str()` and `summary()` functions. To check whether a specific firm appeared in the dataset, I created a function `check_firm_name(data, firm_name)` that compares the given name to the `name_native` column. If a match is found, the function prints "yes" along with the years in which financial statements are available. When applied to *EventRental Hempel GmbH*, the function returned entries for the years 2012 through 2021.
 
 ```{r}
 #| include: false
@@ -197,13 +197,49 @@ USE_NS <- USE["turn",]
 
 *23.05.2025*
 
-According to @mishra2019application, I applied a two-sample, two-tailed t-test to compare the mean equity ratios of two distinct groups in the year 2021: firms located in postal code 13359 and all other firms in Berlin. The goal was to test whether the difference in mean equity ratios between these two populations is statistically significant.
+Following the approach of @mishra2019application, I conducted two two-sample, two-tailed t-tests to compare the mean total assets and mean equity ratio of two distinct groups of firms in 2021: those located in postal code 13359 and those in the rest of Berlin. The objective was to assess whether the observed differences between these two populations are statistically significant.
 
 *28.05.2025*
 
-I began by checking whether there were any negative values in the total assets column and fortunately, there were none. Since I conducted a t-test, I focused only on data from the year 2021 rather than using the full panel. I added a new column to the dataset to calculate equity ratios, then created a dummy variable indicating whether a firm's postcode is **13359** (1) or not (0). Using this, I ran a two-sample t-test to compare the mean equity ratios between the two groups. I used the `tidy()` function to clean up the test results, renamed the columns for clarity and added notes to create the final table. The table was formatted using LaTeX for better presentation.
+Given the scope of the two t-tests, I focused only on data from the year 2021 rather than using the full panel. I added a new column to the dataset to calculate equity ratios, then created a dummy variable indicating whether a firm's postcode is **13359** (1) or not (0). Using this, I ran two two-sample t-tests to compare the mean total assets and, separately, the mean equity ratio between the two groups. I used the `tidy()` function to clean up both test results, with columns renamed for clarity. I then combined the two result tables together using `bind_rows()` and added a new leading column to indicate the variable being tested. The final table was formatted using LaTeX for better presentation.
 
+While creating the final table, I encountered an issue that I have not been able to solve. I wanted my p-values to print "\< 0.001" when that was the case. However, with LaTeX, I did not manage to display this properly and instead got "¡ 0.001". I tried to use the same format as the other p-value, which is `as.character(round(p.value, 4))`, but then for a very small p-value, the value gets rounded to zero. I did not want that in my table since the true value would be hidden. That is why I chose to use the scientific notation for the first p-value. Therefore, we can still see the actual p-value.
 
+*29.05.2025*
+
+Based on the final table (see additional PDF), we can interpret the results. The table reports the mean values for the two variables being compared, namely *Total Assets* and *Equity Ratios*, along with their corresponding *t*-statistics, degrees of freedom, p-values and 95% confidence intervals, corresponding to a significance level of 0.05.
+
+The mean total assets for firms in postcode 13359 is approximately €1.8 million, while for firms in all other postcodes is about €24.6 million. The *t*-statistic is roughly 6.16, which is considered quite large, indicating that the observed difference between the two groups is several standard errors away from zero. The degrees of freedom for this test is 25'734, reflecting the effective sample size after accounting for variance differences. The p-value is less than 0.001, indicating that the difference in means between the two groups is statistically significant and not equals to zero. Additionally, the 95% confidence interval (approximately €15.5 million to €30 million) does not include zero, further supporting the conclusion that the mean total assets differ significantly between firms in postcode 13359 and those elsewhere.
+
+These results suggest that, on average, firms in my postal code are significantly smaller or potentially represent a less developed business environment compared to those in other areas. However, as noted in step 2, some firms are not registered, such as sole proprietors or informal businesses and therefore are not included in the dataset. This means the analysis may not capture the full economic activity in the postcode and this limitation applies to both groups being compared.
+
+The mean equity ratio for firms in postcode 13359 is approximately -0.05, whereas for firms in all other postcodes it is around -46.87, an unusually large negative value. To understand this, I examined the summary statistics for shareholders’ funds (`shfd`), total assets (`toas`) and equity ratio using the `summary()` function. I focused primarily on the minimum and maximum values to gain insight into the reasons behind this extreme mean. The following table presents these summary values.
+
+**Table 6: Selected Descriptive Statistics for Equity Ratio, Total Assets and Shareholders' Funds**
+
+| Variable                   | Minimum      | Mean       | Maximum        |
+|----------------------------|--------------|------------|----------------|
+| Equity Ratios (shfd/toas)  | -1'001'000   | -46.33     | 1.00           |
+| Total Assets (toas)        | 1.00         | 24'510'000 | 71'840'000'000 |
+| Shareholders' Funds (shfd) | -657'000'000 | 8'704'000  | 22'040'000'000 |
+
+The data shows that there are no negative values for total assets, but negative equity values do exist. This could indicate that some firms are in financial distress or have high levels of debt, meaning they owe more than they own. To gain further insight, I investigated how many firms had negative equity values within the two groups: those in postcode 13359 and those in other postcodes.
+
+**Table 7: Summary of Firms with Negative Shareholders' Funds by Postal Code Group**
+
+| Location Group (13359 or not) | Total Firms (count) | Firms with Negative Shareholders' Funds (shfd) |
+|----|----|----|
+| 1 | 56 | 11 |
+| 0 | 27'680 | 4'502 |
+| NA | 273 | 68 |
+
+From both tables, we can understand why the mean equity ratio for firms outside postal code 13359 is so low. There are many firms with negative shareholders’ funds (`shfd`) in that group. In contrast, the mean equity ratio for firms in postal code 13359 is closer to zero, suggesting that on average, these firms have nearly neutral equity ratios. In other words, those firms' assets and liabilites are nearly balanced. Additionally, some firms were not assigned to either group (dummy 0 or 1) due to missing postcode data. These cases were excluded from the t-test analysis.
+
+The *t*-statistic is approximately -1.27, which is relatively small in absolute value. With a large sample size, the degrees of freedom for this test is 27,682. The p-value is 0.20, indicating that the difference in mean equity ratios between the two groups is **not** statistically significant and can not be distinguished from zero at the 0.05 significance level. Furthermore, the 95% confidence interval, ranging from about -118.95 to 25.28, includes zero, reinforcing the conclusion that there is no significant difference in mean equity ratio between firms in postcode 13359 and those in other areas.
+
+# Conclusion
+
+Throughout this research log, I documented my process and findings in a structured manner. In Steps 1 and 2, I identified several firms from my postal code and verified their presence on <https://www.unternehmensregister.de/ureg/>. Only one of them had publicly available register and financial data. In Step 3, I downloaded the Orbis dataset and confirmed that the same firm was also included there. In Step 4, I identified the largest firm in my postal code based on total assets in Orbis and compared its financial data with the official filings on <https://www.unternehmensregister.de/ureg/>. The values matched. Finally, in Step 5, I performed two two-sample t-tests to compare mean total assets and equity ratios between firms located in postal code 13359 and those in the rest of Berlin. The results showed that firms in my postal code are significantly smaller in terms of total assets (p-value \< 0.001), while the difference in equity ratios was not statistically significant (p-value \> 0.05).
 
 \newpage
 
